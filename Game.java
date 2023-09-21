@@ -11,6 +11,7 @@ public class Game {
         Scanner ui = new Scanner(System.in);
         boolean exit = false;
         boolean gameEnd = false;
+        boolean levelUp = false;
 //        int[] Inventory = {3,4,2,2,2,2,2,2,2,2};
         int[][] shop = new int[7][2];
 //        int[][] shop = {{1,50},{1,50},{2,100},{3,50},{4,75}};
@@ -49,10 +50,6 @@ public class Game {
         int playerDamageTaken = 0;
         int bossDamageTaken = 0;
         int[] level = {1,500,0,0};
-//        int playerLevel = 1;
-//        int nextLevelReq = 500;
-//        int levelProgress = 0;
-//        int levelEarned = 0;
         int coins = 350;
         int coinsEarned = 0;
         int event = 0;
@@ -169,7 +166,7 @@ public class Game {
 
                             level[LEVEL_EARNED] = bossDamageTaken;
                         }
-
+                        levelUp = announceLevelUp(level,testLevelUpdate(level));
                         maxHealth = updateMaxHealth(maxHealth, level, testLevelUpdate(level));
                         updateLevel(level);
                     }
@@ -177,8 +174,16 @@ public class Game {
                 if (bossHealth <= 0) {
                     event = 2;
                 }
+
                 System.out.println(TURN_BREAK);
-                System.out.println("\nYou took " + playerDamageTaken + " damage and you dealt " + bossDamageTaken + " damage. You earned " + level[LEVEL_EARNED] + " experience.\n");
+                System.out.println("\nYou took " + playerDamageTaken + " damage and you dealt " + bossDamageTaken + " damage. You earned " + level[LEVEL_EARNED] + " experience.");
+
+                if (levelUp) {
+                    System.out.println("You leveled up to level " + level[CURRENT_LEVEL] + "!");
+                    levelUp = false;
+                }
+                System.out.println();
+
                 level[LEVEL_EARNED] = 0;
                 playerDamageTaken = 0;
             }
@@ -189,18 +194,24 @@ public class Game {
                 coins = coins + coinsEarned;
 
                 level[LEVEL_EARNED] = 500+(500*bossType);
-                updateLevel(level);
-
+                levelUp = announceLevelUp(level,testLevelUpdate(level));
                 maxHealth = updateMaxHealth(maxHealth, level, testLevelUpdate(level));
+                updateLevel(level);
 
                 System.out.println("You defeated the boss! You earned " + coinsEarned + " coins, " + level[LEVEL_EARNED] + " experience, and you found an item.\n");
                 coinsEarned = 0;
                 level[LEVEL_EARNED] = 0;
 
+                if (levelUp) {
+                    System.out.println("You leveled up to level " + level[CURRENT_LEVEL] + "!");
+                    levelUp = false;
+                }
+                System.out.println();
+
                 player(userHealth, maxHealth, coins, level);
                 printInventory(Inventory, level);
 
-                System.out.print("Would you like to pick up this item (damage II (dmg:" + damageCalc(level, 2) + "(true or false)? ");
+                System.out.print("Would you like to pick up Damage II (dmg: " + damageCalc(level, 2) + ") (true or false)? ");
                 verify = ui.nextBoolean();
             }
             if (verify) {
@@ -296,9 +307,9 @@ public class Game {
     }
     public static void player(int userHealth, int maxHealth, int coins, int[] level) {
         printNameLine("YOUR STATS");
-        System.out.println("Your health: " + userHealth + "/" + maxHealth);
+        System.out.println("Health: " + userHealth + "/" + maxHealth);
         System.out.println("Level " + level[CURRENT_LEVEL] + ": " + level[LEVEL_PROGRESS] + "/" + level[NEXT_LEVEL_REQ]);
-        System.out.println("Your coins: " + coins);
+        System.out.println("Coins: " + coins);
         System.out.println(LINE);
     }
     public static int damage(int health, int[] Inventory, int inventoryIndex, int[] level) {
@@ -379,8 +390,10 @@ public class Game {
         switch(Inventory[inventoryIndex]) {
             case 3:
                 userHealth = userHealth+healCalc(level, 3);
+                break;
             case 4:
                 userHealth = userHealth+healCalc(level, 4);
+                break;
         }
         if (userHealth > maxHealth) {
             userHealth = maxHealth;
@@ -391,10 +404,10 @@ public class Game {
         int heal = 0;
         switch (index) {
             case 3:
-                heal = 75;
+                heal = 50;
                 break;
             case 4:
-                heal = 150;
+                heal = 125;
         }
         heal = (int)(heal+((heal*0.25)*(level[CURRENT_LEVEL]-1)));
         return heal;
@@ -468,6 +481,9 @@ public class Game {
             maxHealth = maxHealth + (((maxHealth/10)*(levelCheck[CURRENT_LEVEL]))/2);
         }
         return maxHealth;
+    }
+    public static boolean announceLevelUp(int[] level, int[] levelCheck) {
+        return levelCheck[CURRENT_LEVEL] > level[CURRENT_LEVEL];
     }
     public static int[] testLevelUpdate(int[] level) {
         int[] newArray = new int[4];
