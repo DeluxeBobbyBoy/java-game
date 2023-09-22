@@ -12,9 +12,7 @@ public class Game {
         boolean exit = false;
         boolean gameEnd = false;
         boolean levelUp = false;
-//        int[] Inventory = {3,4,2,2,2,2,2,2,2,2};
         int[][] shop = new int[7][2];
-//        int[][] shop = {{1,50},{1,50},{2,100},{3,50},{4,75}};
         int[] Inventory = new int[10];
         int[] fillIndex = new int[5];
         int step = 0;
@@ -46,7 +44,6 @@ public class Game {
         int bossMaxHealth = 500;
         int userHealth = 300;
         int maxHealth = 300;
-        int missingHealth = 0;
         int playerDamageTaken = 0;
         int bossDamageTaken = 0;
         int[] level = {1,500,0,0};
@@ -199,7 +196,6 @@ public class Game {
                 updateLevel(level);
 
                 System.out.println("You defeated the boss! You earned " + coinsEarned + " coins, " + level[LEVEL_EARNED] + " experience, and you found an item.\n");
-                coinsEarned = 0;
                 level[LEVEL_EARNED] = 0;
 
                 if (levelUp) {
@@ -251,7 +247,6 @@ public class Game {
         System.out.println("game over!");
     }
     public static void printInventory(int[] Inventory, int[] level) {
-//        System.out.println();
         printNameLine("INVENTORY");
         for (int i = 0; i < Inventory.length; i++) {
             System.out.print(i+1 + ". ");
