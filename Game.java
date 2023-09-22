@@ -44,8 +44,8 @@ public class Game {
         int bossAtk = 0;
         int bossHealth = 500;
         int bossMaxHealth = 500;
-        int userHealth = 500;
-        int maxHealth = 500;
+        int userHealth = 300;
+        int maxHealth = 300;
         int missingHealth = 0;
         int playerDamageTaken = 0;
         int bossDamageTaken = 0;
@@ -129,7 +129,7 @@ public class Game {
                         System.out.println("\nPlease enter a valid input.");
                     }
                     if (validInput) {
-                        bossAtk = (int)(25 * Math.random() + 3*bossType + 50);
+                        bossAtk = (int)(25 * Math.random() + 10*bossType + 50);
 
                         if (inventoryIndex != -1) {
                             switch (Inventory[inventoryIndex]) {
@@ -190,7 +190,7 @@ public class Game {
             boolean verify = false;
             if (userHealth > 0) {
 
-                coinsEarned = + 500+(int)(bossType*100*Math.random());
+                coinsEarned = + 500+(int)(bossType*100*Math.random()+(50*bossType));
                 coins = coins + coinsEarned;
 
                 level[LEVEL_EARNED] = 500+(500*bossType);
@@ -244,7 +244,7 @@ public class Game {
             else {
                 event = 0;
             }
-            bossMaxHealth = bossMaxHealth+100;
+            bossMaxHealth = bossMaxHealth+100+(bossMaxHealth*bossType)/10;
             bossHealth = bossMaxHealth;
             bossType++;
         }
@@ -478,7 +478,7 @@ public class Game {
     }
     public static int updateMaxHealth(int maxHealth, int[] level, int[] levelCheck) {
         if (levelCheck[CURRENT_LEVEL] > level[CURRENT_LEVEL]) {
-            maxHealth = maxHealth + (((maxHealth/10)*(levelCheck[CURRENT_LEVEL]))/2);
+            maxHealth = maxHealth + ((75)*(levelCheck[CURRENT_LEVEL])/4);
         }
         return maxHealth;
     }
